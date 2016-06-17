@@ -1,0 +1,3 @@
+C:\Users\kir\Documents\Visual Studio 2015\Projects\Tv-Series-progress-recorder\Tv-Series-progress-recorder\bin\Debug\ShowProgressRecorder.exe.config
+C:\Users\kir\Documents\Visual Studio 2015\Projects\Tv-Series-progress-recorder\Tv-Series-progress-recorder\obj\Debug\ShowProgressRecorder.exe
+C:\Users\kir\Documents\Visual Studio 2015\Projects\Tv-Series-progress-recorder\Tv-Series-progress-recorder\obj\Debug\ShowProgressRecorder.pdb

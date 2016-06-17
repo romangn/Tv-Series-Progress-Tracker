@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvSeriesProgressTracker", "ShowProgressRecorder\TvSeriesProgressTracker.csproj", "{545D806E-B8BC-4647-9BA4-8D6C4BAAE6F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvSeriesProgressTracker", "TvSeriesProgressTracker\TvSeriesProgressTracker.csproj", "{545D806E-B8BC-4647-9BA4-8D6C4BAAE6F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

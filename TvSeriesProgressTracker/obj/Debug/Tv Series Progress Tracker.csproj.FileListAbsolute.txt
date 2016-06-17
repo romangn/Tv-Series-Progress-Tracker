@@ -1,0 +1,30 @@
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\bin\Debug\Newtonsoft.Json.dll
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\bin\Debug\Newtonsoft.Json.xml
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Tv Series Progress Tracker.csprojResolveAssemblyReference.cache
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Views\DisplayAllImdbShows.g.cs
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Views\EditEntry.g.cs
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\MainWindow.g.cs
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Views\NewEntry.g.cs
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Views\SearchExistingShows.g.cs
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Views\ViewAllShows.g.cs
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\App.g.cs
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Views\DisplayAllImdbShows.baml
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Views\EditEntry.baml
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\MainWindow.baml
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Views\NewEntry.baml
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Views\SearchExistingShows.baml
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Views\ViewAllShows.baml
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\Tv Series Progress Tracker.csproj.GenerateResource.Cache
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\bin\Debug\TvSeriesProgressTracker.exe.config
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\bin\Debug\TvSeriesProgressTracker.exe
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\bin\Debug\TvSeriesProgressTracker.pdb
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\TvSeriesProgressTracker_MarkupCompile.cache
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\TvSeriesProgressTracker_MarkupCompile.lref
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\TvSeriesProgressTracker.g.resources
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\TvSeriesProgressTracker.Properties.Resources.resources
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\TvSeriesProgressTracker.exe
+C:\Users\kir\Documents\Visual Studio 2015\Projects\ShowProgressRecorder\ShowProgressRecorder\obj\Debug\TvSeriesProgressTracker.pdb
+C:\Users\kir\Documents\Visual Studio 2015\Projects\Tv-Series-Progress-Tracker\ShowProgressRecorder\bin\Debug\TvSeriesProgressTracker.exe.config
+C:\Users\kir\Documents\Visual Studio 2015\Projects\Tv-Series-Progress-Tracker\ShowProgressRecorder\obj\Debug\TvSeriesProgressTracker.exe
+C:\Users\kir\Documents\Visual Studio 2015\Projects\Tv-Series-Progress-Tracker\ShowProgressRecorder\obj\Debug\TvSeriesProgressTracker.pdb

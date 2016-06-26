@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TvSeriesProgressTracker"
         mc:Ignorable="d"
-        Title="View all shows" Height="640" Width="480">
+        Title="View all shows" Height="1024" Width="768">
     <Window.Resources>
         <local:VisibilityConverter x:Key="visibilityConverter" />
         <local:YesNoConverter x:Key="yesNoConverter" />
@@ -34,6 +34,9 @@
                               Style="{StaticResource visibilityStyle}"/>
                     <MenuItem Header="View at imdb"
                               Click="imdbView_Click"
+                              Style="{StaticResource visibilityStyle}" />
+                    <MenuItem Header="View all episodes"
+                              Click="viewEpisodes_Click"
                               Style="{StaticResource visibilityStyle}" />
                 </ContextMenu>
             </ListView.ContextMenu>

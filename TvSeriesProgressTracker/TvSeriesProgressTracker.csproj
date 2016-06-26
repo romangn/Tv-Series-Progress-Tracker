@@ -75,6 +75,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Database\DatabaseManipulation.cs" />
+    <Compile Include="Models\EpisodeRecord.cs" />
     <Compile Include="Views\DisplayAllImdbShows.xaml.cs">
       <DependentUpon>DisplayAllImdbShows.xaml</DependentUpon>
     </Compile>
@@ -89,12 +90,15 @@
     </Compile>
     <Compile Include="Models\ShowRecord.cs" />
     <Compile Include="Data access\ShowRepository.cs" />
+    <Compile Include="Views\ViewAllEpisodes.xaml.cs">
+      <DependentUpon>ViewAllEpisodes.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ViewAllShows.xaml.cs">
       <DependentUpon>ViewAllShows.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VisibilityConverter.cs" />
-    <Compile Include="YearsFormatConverter.cs" />
-    <Compile Include="YesNoConverter.cs" />
+    <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="Converters\YearsFormatConverter.cs" />
+    <Compile Include="Converters\YesNoConverter.cs" />
     <Page Include="Views\DisplayAllImdbShows.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -120,6 +124,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SearchExistingShows.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ViewAllEpisodes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

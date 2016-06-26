@@ -52,3 +52,5 @@ C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSer
 C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker\obj\Debug\TvSeriesProgressTracker.g.resources
 C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker\obj\Debug\TvSeriesProgressTracker.Properties.Resources.resources
 C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker\obj\Debug\TvSeriesProgressTracker.csproj.GenerateResource.Cache
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker\obj\Debug\Views\ViewAllEpisodes.g.cs
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker\obj\Debug\Views\ViewAllEpisodes.baml

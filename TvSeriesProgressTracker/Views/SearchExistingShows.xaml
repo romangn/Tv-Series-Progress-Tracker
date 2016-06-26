@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TvSeriesProgressTracker"
         mc:Ignorable="d"
-        Title="SearchExistingShows" Height="300" Width="300">
+        Title="SearchExistingShows" Height="1024" Width="768">
     <Window.Resources>
         <local:VisibilityConverter x:Key="visibilityConverter" />
         <local:YesNoConverter x:Key="yesNoConverter" />

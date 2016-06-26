@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TvSeriesProgressTracker.Views;
 
 namespace TvSeriesProgressTracker
 {
@@ -51,11 +52,13 @@ namespace TvSeriesProgressTracker
                 }
                 else
                 {
-                    var episodes = _repo.getEpisodesInSeasons(_show.imdbID);
+                    var showEpisodes = _repo.getEpisodesInSeasons(_show.imdbID);
                     var id = _repo.getIdOfExistingShow(_show.Title);
-                    _repo.addEpisodesToShow(id, episodes);
+                    _repo.addEpisodesToShow(id, showEpisodes);
                     MessageBox.Show("The new show has been added");
-                    this.Close();
+                    ViewAllEpisodes eps = new ViewAllEpisodes();
+                    eps.episodes.ItemsSource = _repo.getAllEpisodesInShow(_show.Title);
+                    eps.Show();
                 }
             }
         }

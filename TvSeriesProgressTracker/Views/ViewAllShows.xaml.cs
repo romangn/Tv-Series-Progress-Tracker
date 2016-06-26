@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TvSeriesProgressTracker.Views;
 
 namespace TvSeriesProgressTracker
 {
@@ -64,6 +65,15 @@ namespace TvSeriesProgressTracker
                 _repo.openTheimdbPage(id);
             else
                 MessageBox.Show("Could not find show");
+        }
+
+        private void viewEpisodes_Click(object sender, RoutedEventArgs e)
+        {
+            _show = (ShowRecord)shows.SelectedItem;
+            ViewAllEpisodes allEpisodes = new ViewAllEpisodes();
+            allEpisodes.episodes.ItemsSource = _repo.getAllEpisodesInShow(_show.Title);
+            allEpisodes.Closed += ChildWindowClosed;
+            allEpisodes.Show();
         }
     }
 }

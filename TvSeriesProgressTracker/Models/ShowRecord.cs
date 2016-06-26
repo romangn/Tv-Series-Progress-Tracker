@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using TvSeriesProgressTracker.Models;
 
 namespace TvSeriesProgressTracker
 {
@@ -39,7 +40,7 @@ namespace TvSeriesProgressTracker
         private string _oldName;
         private bool _isFinished;
 
-        public List<episodeRecord> Episodes = new List<episodeRecord>();
+        public List<EpisodeRecord> Episodes = new List<EpisodeRecord>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -345,14 +346,4 @@ namespace TvSeriesProgressTracker
 
     }
 
-    public class episodeRecord
-    {
-        public string Title { get; set; }
-        public string Released { get; set; }
-        public int Episode { get; set; }
-        public string imdbRating { get; set; }
-        public string imdbId { get; set; }
-        public int Season { get; set; }
-        public string ShowId { get; set; }
-    }
 }

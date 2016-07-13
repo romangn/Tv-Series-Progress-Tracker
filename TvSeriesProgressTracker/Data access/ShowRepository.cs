@@ -246,7 +246,18 @@ namespace TvSeriesProgressTracker
         /// <param name="records">A dictionary of episodes</param>
         public void addEpisodesToShow (int id, Dictionary<int, List<EpisodeRecord>> records)
         {
-            _db.addEpisodeEntries(id, records);
+            var episodeList = new List<EpisodeRecord>();
+            foreach (KeyValuePair<int, List<EpisodeRecord>> record in records)
+            {
+                foreach (EpisodeRecord episode in record.Value)
+                {
+                    episode.Title = episode.Title.Replace("'", @"''");
+                    episode.Season = record.Key;
+                    episodeList.Add(episode);
+                }
+            }
+            MessageBox.Show(episodeList.Count.ToString());
+            _db.addEpisodeEntries(id, episodeList);
         }
 
 

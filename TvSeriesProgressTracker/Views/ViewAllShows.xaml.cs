@@ -75,5 +75,19 @@ namespace TvSeriesProgressTracker
             allEpisodes.Closed += ChildWindowClosed;
             allEpisodes.Show();
         }
+
+        private void checkForNewEpisodes_Click(object sender, RoutedEventArgs e)
+        {
+            _show = (ShowRecord)shows.SelectedItem;
+            int currentNumberOfEps = _repo.getAllEpisodesInShow(_show.Title).Count;
+            var episodesInShow = _repo.getEpisodesInSeasons(_repo.findImdbId(_show.Title));
+            int currentTotalOnline = episodesInShow.Sum(x => x.Value.Count);
+            if (currentTotalOnline == currentNumberOfEps)
+                MessageBox.Show("No new episodes found");
+            else
+            {
+                //TODO get new episodes and add them
+            }
+        }
     }
 }

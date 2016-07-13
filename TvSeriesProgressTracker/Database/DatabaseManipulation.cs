@@ -53,10 +53,10 @@ namespace TvSeriesProgressTracker
         {
             var conn = new SqlConnection(connectionString);
             string episodeQuery = "if not exists (select name from sysobjects where name = 'Episodes') CREATE TABLE" +
-                " Episodes(EpisodeId int PRIMARY KEY IDENTITY (1, 1), Title nvarchar(50), EpisodeNumber int NOT NULL," +
+                " Episodes(EpisodeId int PRIMARY KEY IDENTITY (1, 1), Title nvarchar(100), EpisodeNumber int NOT NULL," +
                 " Season int NOT NULL, IdofShow int, FOREIGN KEY (IdofShow) REFERENCES Shows(ShowId))";
             string query = "if not exists (select name from sysobjects where name = 'Shows') CREATE TABLE" +
-                " Shows(ShowId int PRIMARY KEY IDENTITY (1, 1), Title nvarchar(50) NOT NULL, Genre nvarchar(50) NOT NULL,"
+                " Shows(ShowId int PRIMARY KEY IDENTITY (1, 1), Title nvarchar(100) NOT NULL, Genre nvarchar(50) NOT NULL,"
                 + " CurrentEpisode int, CurrentSeason int, IsFinished bit, TotalSeasons int, ImdbId nvarchar(50)) ";
             var command = new SqlCommand(query, conn);
             var comm = new SqlCommand(episodeQuery, conn);
@@ -221,28 +221,24 @@ namespace TvSeriesProgressTracker
         /// Adds episodes to the database
         /// </summary>
         /// <param name="id">An id of the show</param>
-        /// <param name="records">A collection of episodes</param>
-        public void addEpisodeEntries (int id, Dictionary<int, List<EpisodeRecord>> records)
+        /// <param name="episodes">A collection of episodes</param>
+        public void addEpisodeEntries (int id, List<EpisodeRecord> episodes)
         {
             string query = "";
             var connection = new SqlConnection(connectionString);
             connection.Open();
-            foreach (KeyValuePair<int, List<EpisodeRecord>> record in records)
+            foreach (var episode in episodes)
             {
-                foreach (EpisodeRecord episode in record.Value)
+                query = string.Format("Insert into Episodes(Title, EpisodeNumber, Season, IdofShow)" +
+                    " values('{0}', '{1}', '{2}', '{3}');", episode.Title, episode.Episode, episode.Season, id);
+                var command = new SqlCommand(query, connection);
+                try
                 {
-                    var command = new SqlCommand(query, connection);
-                    query = string.Format("Insert into Episodes(Title, EpisodeNumber, Season, IdofShow)" +
-                        " values('{0}', '{1}', '{2}', '{3}');", episode.Title, episode.Episode, record.Key, id);
-                    command = new SqlCommand(query, connection);
-                    try
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.ToString();
-                    }
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
                 }
             }
             if ((connection.State == ConnectionState.Open))

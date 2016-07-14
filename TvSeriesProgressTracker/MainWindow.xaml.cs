@@ -73,9 +73,16 @@ namespace TvSeriesProgressTracker
         {
             if (_repo.checkIfInternetConnectionExists())
             {
-                DisplayAllImdbShows shows = new DisplayAllImdbShows();
-                shows.Closed += ChildWindowClosed;
-                shows.Show();
+                if (_repo.CheckIfApiIsOnline("http://www.omdbapi.com/", 5000))
+                {
+                    DisplayAllImdbShows shows = new DisplayAllImdbShows();
+                    shows.Closed += ChildWindowClosed;
+                    shows.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Resource is not available, please try again later");
+                }
             }
             else
             {

@@ -15,6 +15,13 @@ namespace TvSeriesProgressTracker
     {
         private DatabaseManipulation _db;
 
+        private static IEnumerable<HttpStatusCode> _statusCodes = new[]
+        {
+            HttpStatusCode.Accepted,
+            HttpStatusCode.Found,
+            HttpStatusCode.OK
+        };
+
         public ShowRepository ()
         {
             _db = new DatabaseManipulation();
@@ -31,6 +38,8 @@ namespace TvSeriesProgressTracker
             bool success = false;
             if (!checkIfShowAlreadyExists(show))
             {
+                if (show.imdbID == null)
+                    show.imdbID = "Manual";
                 _db.createNewEntry(show);
                 success = true;
             }
@@ -251,12 +260,10 @@ namespace TvSeriesProgressTracker
             {
                 foreach (EpisodeRecord episode in record.Value)
                 {
-                    episode.Title = episode.Title.Replace("'", @"''");
                     episode.Season = record.Key;
                     episodeList.Add(episode);
                 }
             }
-            MessageBox.Show(episodeList.Count.ToString());
             _db.addEpisodeEntries(id, episodeList);
         }
 
@@ -321,6 +328,23 @@ namespace TvSeriesProgressTracker
         public int findEpisodesShowId (string title)
         {
             return _db.getShowIdOfEpisode(title);
+        }
+
+        public bool CheckIfApiIsOnline (string url, int timeout)
+        {
+            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+            {
+                if (request != null)
+                {
+                    request.Method = "HEAD";
+                    request.Timeout = timeout;
+                    using (var response = request.GetResponse() as HttpWebResponse)
+                    {
+                        return response != null && _statusCodes.Contains(response.StatusCode);
+                    }
+                }
+            }
+            return false;
         }
     }
 }

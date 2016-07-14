@@ -54,10 +54,10 @@ namespace TvSeriesProgressTracker
             var conn = new SqlConnection(connectionString);
             string episodeQuery = "if not exists (select name from sysobjects where name = 'Episodes') CREATE TABLE" +
                 " Episodes(EpisodeId int PRIMARY KEY IDENTITY (1, 1), Title nvarchar(100), EpisodeNumber int NOT NULL," +
-                " Season int NOT NULL, IdofShow int, FOREIGN KEY (IdofShow) REFERENCES Shows(ShowId))";
+                " Season int NOT NULL, IdofShow int, FOREIGN KEY (IdofShow) REFERENCES Shows(ShowId));";
             string query = "if not exists (select name from sysobjects where name = 'Shows') CREATE TABLE" +
                 " Shows(ShowId int PRIMARY KEY IDENTITY (1, 1), Title nvarchar(100) NOT NULL, Genre nvarchar(50) NOT NULL,"
-                + " CurrentEpisode int, CurrentSeason int, IsFinished bit, TotalSeasons int, ImdbId nvarchar(50)) ";
+                + " CurrentEpisode int, CurrentSeason int, IsFinished bit, TotalSeasons int, ImdbId nvarchar(50));";
             var command = new SqlCommand(query, conn);
             var comm = new SqlCommand(episodeQuery, conn);
             try
@@ -109,11 +109,19 @@ namespace TvSeriesProgressTracker
         /// <param name="show">A show to add</param>
         public void createNewEntry (ShowRecord show)
         {
+            //note - imdbid removed for now
             string query = string.Format("Insert into Shows (Title, Genre, CurrentEpisode, CurrentSeason, IsFinished, TotalSeasons, ImdbId)" 
-                + " values ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", show.Title, show.Genre, show.CurrentEpisode, show.CurrentSeason,
-                show.IsFinished, show.totalSeasons, show.imdbID);
+                + " values (@Title, @Genre, @CurrentEpisode, @CurrentSeason, @IsFinished, @TotalSeasons, @ImdbId);");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Title", show.Title);
+            command.Parameters.AddWithValue("@Genre", show.Genre);
+            command.Parameters.AddWithValue("@CurrentEpisode", show.CurrentEpisode);
+            command.Parameters.AddWithValue("@CurrentSeason", show.CurrentSeason);
+            command.Parameters.AddWithValue("@IsFinished", show.IsFinished);
+            command.Parameters.AddWithValue("@TotalSeasons", show.totalSeasons);
+            command.Parameters.AddWithValue("@ImdbId", show.imdbID);
+            //command.Parameters.AddWithValue("@ImdbId", show.imdbID);
             try
             {
                 conn.Open();
@@ -139,12 +147,17 @@ namespace TvSeriesProgressTracker
         /// <param name="oldName">An original name, required for keeping track of the show</param>
         public void editEntry (ShowRecord record, string oldName)
         {
-            string query = string.Format("Update Shows set Title=('{0}'), Genre=('{1}'), CurrentEpisode=('{2}')," +
-                " CurrentSeason=('{3}'), IsFinished=('{4}'), TotalSeasons=('{5}'), ImdbId=('{6}') where Title=('{7}')", record.Title, 
-                record.Genre, record.CurrentEpisode, record.CurrentSeason, record.IsFinished, record.totalSeasons, 
-                record.imdbID, oldName);
+            string query = string.Format("Update Shows set Title=@Title, Genre=@Genre, CurrentEpisode=@CurrentEpisode," +
+                " CurrentSeason=@CurrentSeason, IsFinished=@IsFinished, TotalSeasons=@TotalSeasons where Title=@OldTitle;");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Title", record.Title);
+            command.Parameters.AddWithValue("@Genre", record.Genre);
+            command.Parameters.AddWithValue("@CurrentEpisode", record.CurrentEpisode);
+            command.Parameters.AddWithValue("@CurrentSeason", record.CurrentSeason);
+            command.Parameters.AddWithValue("@IsFinished", record.IsFinished);
+            command.Parameters.AddWithValue("@TotalSeasons", record.totalSeasons);
+            command.Parameters.AddWithValue("OldTitle", oldName);
             try
             {
                 conn.Open();
@@ -169,9 +182,10 @@ namespace TvSeriesProgressTracker
         /// <param name="title">A title of the show to remove</param>
         public void removeEntry (string title)
         {
-            string query = string.Format("Delete from Shows where Title = ('{0}')", title);
+            string query = string.Format("Delete from Shows where Title = @Title;");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Title", title);
             try
             {
                 conn.Open();
@@ -196,9 +210,10 @@ namespace TvSeriesProgressTracker
         /// <param name="id">An id of the database show record</param>
         public void removeEpisodeEntries (int id)
         {
-            string query = string.Format("Delete from Episodes where IdOfShow = ('{0}')", id);
+            string query = string.Format("Delete from Episodes where IdOfShow = @Id;");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Id", id);
             try
             {
                 conn.Open();
@@ -230,8 +245,12 @@ namespace TvSeriesProgressTracker
             foreach (var episode in episodes)
             {
                 query = string.Format("Insert into Episodes(Title, EpisodeNumber, Season, IdofShow)" +
-                    " values('{0}', '{1}', '{2}', '{3}');", episode.Title, episode.Episode, episode.Season, id);
+                    " values(@Title, @EpisodeNumber, @Season, @IdofShow);");
                 var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Title", episode.Title);
+                command.Parameters.AddWithValue("@EpisodeNumber", episode.Episode);
+                command.Parameters.AddWithValue("@Season", episode.Season);
+                command.Parameters.AddWithValue("@IdofShow", id);
                 try
                 {
                     command.ExecuteNonQuery();
@@ -255,10 +274,13 @@ namespace TvSeriesProgressTracker
         /// <param name="season">New seasons</param>
         public void changeCurrentEpisode (int id, int episode, int season)
         {
-            string query = string.Format("Update Shows set CurrentEpisode = ('{0}'), CurrentSeason = ('{1}')" +
-                " where ShowId = ('{2}')", episode, season, id);
+            string query = string.Format("Update Shows set CurrentEpisode =@CurrentEpisode, CurrentSeason =@CurrentSeason" +
+                " where ShowId =@ShowId;");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@CurrentEpisode", episode);
+            command.Parameters.AddWithValue("@CurrentSeason", season);
+            command.Parameters.AddWithValue("@ShowId", id);
             try
             {
                 conn.Open();
@@ -285,9 +307,10 @@ namespace TvSeriesProgressTracker
         public bool checkForExistingEntry (string title)
         {
             bool result = false;
-            string query = string.Format("Select count (*) from Shows where Title = ('{0}')", title);
+            string query = string.Format("Select count (*) from Shows where Title = @Title;");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Title", title);
             try
             {
                 conn.Open();
@@ -317,7 +340,7 @@ namespace TvSeriesProgressTracker
         {
             var shows = new List<ShowRecord>();
             var conn = new SqlConnection(connectionString);
-            var command = new SqlCommand("Select * from Shows", conn);
+            var command = new SqlCommand("Select * from Shows;", conn);
             try
             {
                 conn.Open();
@@ -361,8 +384,9 @@ namespace TvSeriesProgressTracker
         {
             var entries = new List<EpisodeRecord>();
             var conn = new SqlConnection(connectionString);
-            string query = string.Format("Select * from Episodes where IdofShow = ('{0}')", id);
+            string query = string.Format("Select * from Episodes where IdofShow = @IdofShow;");
             var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@IdofShow", id);
             try
             {
                 conn.Open();
@@ -402,7 +426,7 @@ namespace TvSeriesProgressTracker
         {
             var shows = new List<ShowRecord>();
             var conn = new SqlConnection(connectionString);
-            string query = "Select * from Shows where Title like @names";
+            string query = "Select * from Shows where Title like @names;";
             var command = new SqlCommand(query, conn);
             try
             {
@@ -447,7 +471,7 @@ namespace TvSeriesProgressTracker
         {
             var shows = new List<ShowRecord>();
             var conn = new SqlConnection(connectionString);
-            var command = new SqlCommand("Select * from Shows where IsFinished = 0", conn);
+            var command = new SqlCommand("Select * from Shows where IsFinished = 0;", conn);
             try
             {
                 conn.Open();
@@ -491,8 +515,9 @@ namespace TvSeriesProgressTracker
         {
             string showId = "";
             var conn = new SqlConnection(connectionString);
-            string query = string.Format("Select ImdbId from Shows where Title=('{0}')", name);
+            string query = string.Format("Select ImdbId from Shows where Title=@Title;");
             var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Title", name);
             try
             {
                 conn.Open();
@@ -528,8 +553,9 @@ namespace TvSeriesProgressTracker
         {
             int showId  = 0;
             var conn = new SqlConnection(connectionString);
-            string query = string.Format("Select ShowId from Shows where Title=('{0}')", name);
+            string query = string.Format("Select ShowId from Shows where Title=@Title;");
             var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Title", name);
             try
             {
                 conn.Open();
@@ -565,8 +591,9 @@ namespace TvSeriesProgressTracker
         {
             int id = 0;
             var conn = new SqlConnection(connectionString);
-            string query = string.Format("Select IdofShow from Episodes where Title=('{0}')", title);
+            string query = string.Format("Select IdofShow from Episodes where Title=@Title;");
             var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Title", title);
             try
             {
                 conn.Open();

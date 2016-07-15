@@ -86,7 +86,12 @@ namespace TvSeriesProgressTracker
                 MessageBox.Show("No new episodes found");
             else
             {
-                //TODO get new episodes and add them
+                var id = _repo.getIdOfExistingShow(_show.Title);
+                _repo.addEpisodesToShow(id, episodesInShow);
+                MessageBox.Show(String.Format("{0} new episodes were added!", currentTotalOnline - currentNumberOfEps));
+                ViewAllEpisodes AllEpisodes = new ViewAllEpisodes();
+                AllEpisodes.episodes.ItemsSource = _repo.getAllEpisodesInShow(_show.Title);
+                AllEpisodes.Show();
             }
         }
     }

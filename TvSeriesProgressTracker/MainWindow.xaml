@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="Unfinished shows" Height="1024" Width="768"
         ResizeMode="NoResize">
+    <Window.Resources>
+        <local:EpisodeConverter x:Key="EpisodeConverter" />
+    </Window.Resources>
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">

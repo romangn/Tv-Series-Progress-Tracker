@@ -75,6 +75,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Database\DatabaseManipulation.cs" />
+    <Compile Include="Converters\EpisodeConverter.cs" />
     <Compile Include="Models\EpisodeRecord.cs" />
     <Compile Include="Views\DisplayAllImdbShows.xaml.cs">
       <DependentUpon>DisplayAllImdbShows.xaml</DependentUpon>

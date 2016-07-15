@@ -244,7 +244,7 @@ namespace TvSeriesProgressTracker
             connection.Open();
             foreach (var episode in episodes)
             {
-                query = string.Format("Insert into Episodes(Title, EpisodeNumber, Season, IdofShow)" +
+                query = string.Format("If not exists (select 1 from Episodes where Title=@Title)insert into Episodes(Title, EpisodeNumber, Season, IdofShow)" +
                     " values(@Title, @EpisodeNumber, @Season, @IdofShow);");
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@Title", episode.Title);

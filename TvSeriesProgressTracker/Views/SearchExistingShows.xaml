@@ -32,6 +32,15 @@
                     <MenuItem Header="Remove" 
                               Click="onClick_Remove"
                               Style="{StaticResource visibilityStyle}"/>
+                    <MenuItem Header="View at imdb"
+                              Click="imdbView_Click"
+                              Style="{StaticResource visibilityStyle}" />
+                    <MenuItem Header="View all episodes"
+                              Click="viewEpisodes_Click"
+                              Style="{StaticResource visibilityStyle}" />
+                    <MenuItem Header="Check for new episodes"
+                              Click="checkForNewEpisodes_Click"
+                              Style="{StaticResource visibilityStyle}" />
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>

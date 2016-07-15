@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TvSeriesProgressTracker.Views;
 
 namespace TvSeriesProgressTracker
 {
@@ -48,6 +49,44 @@ namespace TvSeriesProgressTracker
             entry.DataContext = _show;
             entry.Closed += ChildWindowClosed;
             entry.Show();
+        }
+
+        private void imdbView_Click(object sender, RoutedEventArgs e)
+        {
+            ShowRecord record = (ShowRecord)searchShows.SelectedItem;
+            string id = _repo.findImdbId(record.Title);
+            if (!string.IsNullOrEmpty(id) && !string.IsNullOrWhiteSpace(id))
+                _repo.openTheimdbPage(id);
+            else
+                MessageBox.Show("Could not find show");
+        }
+
+        private void viewEpisodes_Click(object sender, RoutedEventArgs e)
+        {
+            _show = (ShowRecord)searchShows.SelectedItem;
+            ViewAllEpisodes allEpisodes = new ViewAllEpisodes();
+            allEpisodes.episodes.ItemsSource = _repo.getAllEpisodesInShow(_show.Title);
+            allEpisodes.Closed += ChildWindowClosed;
+            allEpisodes.Show();
+        }
+
+        private void checkForNewEpisodes_Click(object sender, RoutedEventArgs e)
+        {
+            _show = (ShowRecord)searchShows.SelectedItem;
+            int currentNumberOfEps = _repo.getAllEpisodesInShow(_show.Title).Count;
+            var episodesInShow = _repo.getEpisodesInSeasons(_repo.findImdbId(_show.Title));
+            int currentTotalOnline = episodesInShow.Sum(x => x.Value.Count);
+            if (currentTotalOnline == currentNumberOfEps)
+                MessageBox.Show("No new episodes found");
+            else
+            {
+                var id = _repo.getIdOfExistingShow(_show.Title);
+                _repo.addEpisodesToShow(id, episodesInShow);
+                MessageBox.Show(String.Format("{0} new episodes were added!", currentTotalOnline - currentNumberOfEps));
+                ViewAllEpisodes AllEpisodes = new ViewAllEpisodes();
+                AllEpisodes.episodes.ItemsSource = _repo.getAllEpisodesInShow(_show.Title);
+                AllEpisodes.Show();
+            }
         }
 
         private void searchBox_KeyDown(object sender, KeyEventArgs e)

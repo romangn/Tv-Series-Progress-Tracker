@@ -255,6 +255,22 @@ namespace TvSeriesProgressTracker
         /// <param name="records">A dictionary of episodes</param>
         public void addEpisodesToShow (int id, Dictionary<int, List<EpisodeRecord>> records)
         {
+            var episodeList = convertEpisodes(records);
+            _db.addEpisodeEntries(id, episodeList);
+        }
+
+        public void addEpisodesToShow (int id, List<EpisodeRecord> records)
+        {
+            _db.addEpisodeEntries(id, records);
+        }
+
+        /// <summary>
+        /// Converts episodes from dictionary to list
+        /// </summary>
+        /// <param name="records"></param>A dictionary to convert
+        /// <returns>A list of converted episodes</returns>
+        public List<EpisodeRecord> convertEpisodes (Dictionary<int, List<EpisodeRecord>> records)
+        {
             var episodeList = new List<EpisodeRecord>();
             foreach (KeyValuePair<int, List<EpisodeRecord>> record in records)
             {
@@ -264,9 +280,8 @@ namespace TvSeriesProgressTracker
                     episodeList.Add(episode);
                 }
             }
-            _db.addEpisodeEntries(id, episodeList);
+            return episodeList;
         }
-
 
         /// <summary>
         /// Opens IMDB page of the show

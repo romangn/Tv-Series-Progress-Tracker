@@ -54,7 +54,7 @@ namespace TvSeriesProgressTracker
             var conn = new SqlConnection(connectionString);
             string episodeQuery = "if not exists (select name from sysobjects where name = 'Episodes') CREATE TABLE" +
                 " Episodes(EpisodeId int PRIMARY KEY IDENTITY (1, 1), Title nvarchar(100), EpisodeNumber int NOT NULL," +
-                " Season int NOT NULL, IdofShow int, FOREIGN KEY (IdofShow) REFERENCES Shows(ShowId));";
+                " Season int NOT NULL, CurrentlyWatching bit, IdofShow int, FOREIGN KEY (IdofShow) REFERENCES Shows(ShowId));";
             string query = "if not exists (select name from sysobjects where name = 'Shows') CREATE TABLE" +
                 " Shows(ShowId int PRIMARY KEY IDENTITY (1, 1), Title nvarchar(100) NOT NULL, Genre nvarchar(50) NOT NULL,"
                 + " CurrentEpisode int, CurrentSeason int, IsFinished bit, TotalSeasons int, ImdbId nvarchar(50));";
@@ -284,6 +284,19 @@ namespace TvSeriesProgressTracker
             try
             {
                 conn.Open();
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+            }
+            command.Parameters.Clear();
+            command = new SqlCommand(query, conn);
+            query = string.Format("Update Episodes set CurrentlyWatching=1 where EpisodeNumber=@CurrentEpisode, Season=@CurrentSeason;");
+            command.Parameters.AddWithValue("@CurrentEpisode", episode);
+            command.Parameters.AddWithValue("@CurrentSeason", season);
+            try
+            {
                 command.ExecuteNonQuery();
             }
             catch (Exception ex)

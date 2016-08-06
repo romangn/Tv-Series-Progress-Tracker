@@ -72,20 +72,47 @@ namespace TvSeriesProgressTracker
 
         private void checkForNewEpisodes_Click(object sender, RoutedEventArgs e)
         {
-            _show = (ShowRecord)searchShows.SelectedItem;
-            int currentNumberOfEps = _repo.getAllEpisodesInShow(_show.Title).Count;
-            var episodesInShow = _repo.getEpisodesInSeasons(_repo.findImdbId(_show.Title));
-            int currentTotalOnline = episodesInShow.Sum(x => x.Value.Count);
-            if (currentTotalOnline == currentNumberOfEps)
-                MessageBox.Show("No new episodes found");
+            if (_repo.checkIfInternetConnectionExists())
+            {
+                if (_repo.CheckIfApiIsOnline("http://www.omdbapi.com/", 5000))
+                {
+                    _show = (ShowRecord)searchShows.SelectedItem;
+                    var currentEpisodes = _repo.getAllEpisodesInShow(_show.Title);
+                    var currentEpisodesOnline = _repo.getEpisodesInSeasons(_repo.findImdbId(_show.Title));
+                    var listCurrentEpisodesOnline = _repo.convertEpisodes(currentEpisodesOnline);
+                    for (int i = listCurrentEpisodesOnline.Count - 1; i >= 0; i--)
+                    {
+                        for (int j = 0; j < currentEpisodes.Count; j++)
+                        {
+                            if (listCurrentEpisodesOnline[i].Title == currentEpisodes[j].Title)
+                            {
+                                listCurrentEpisodesOnline.RemoveAt(i);
+                                break;
+                            }
+                        }
+                    }
+                    if (listCurrentEpisodesOnline.Count == 0)
+                    {
+                        MessageBox.Show("No new episodes were found");
+                    }
+                    else
+                    {
+                        int id = _repo.getIdOfExistingShow(_show.Title);
+                        _repo.addEpisodesToShow(id, listCurrentEpisodesOnline);
+                        MessageBox.Show(String.Format("{0} new episode(s) were added!", listCurrentEpisodesOnline.Count));
+                        ViewAllEpisodes allEpisodes = new ViewAllEpisodes();
+                        allEpisodes.episodes.ItemsSource = _repo.getAllEpisodesInShow(_show.Title);
+                        allEpisodes.Show();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("The online resource is currently unavailable. Please try again later");
+                }
+            }
             else
             {
-                var id = _repo.getIdOfExistingShow(_show.Title);
-                _repo.addEpisodesToShow(id, episodesInShow);
-                MessageBox.Show(String.Format("{0} new episodes were added!", currentTotalOnline - currentNumberOfEps));
-                ViewAllEpisodes AllEpisodes = new ViewAllEpisodes();
-                AllEpisodes.episodes.ItemsSource = _repo.getAllEpisodesInShow(_show.Title);
-                AllEpisodes.Show();
+                MessageBox.Show("Please check your internet connection");
             }
         }
 

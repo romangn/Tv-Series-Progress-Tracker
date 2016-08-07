@@ -77,29 +77,8 @@ namespace TvSeriesProgressTracker
                 if (_repo.CheckIfApiIsOnline("http://www.omdbapi.com/", 5000))
                 {
                     _show = (ShowRecord)searchShows.SelectedItem;
-                    var currentEpisodes = _repo.getAllEpisodesInShow(_show.Title);
-                    var currentEpisodesOnline = _repo.getEpisodesInSeasons(_repo.findImdbId(_show.Title));
-                    var listCurrentEpisodesOnline = _repo.convertEpisodes(currentEpisodesOnline);
-                    for (int i = listCurrentEpisodesOnline.Count - 1; i >= 0; i--)
+                    if (_repo.checkForNewEpisodes(_show.Title))
                     {
-                        for (int j = 0; j < currentEpisodes.Count; j++)
-                        {
-                            if (listCurrentEpisodesOnline[i].Title == currentEpisodes[j].Title)
-                            {
-                                listCurrentEpisodesOnline.RemoveAt(i);
-                                break;
-                            }
-                        }
-                    }
-                    if (listCurrentEpisodesOnline.Count == 0)
-                    {
-                        MessageBox.Show("No new episodes were found");
-                    }
-                    else
-                    {
-                        int id = _repo.getIdOfExistingShow(_show.Title);
-                        _repo.addEpisodesToShow(id, listCurrentEpisodesOnline);
-                        MessageBox.Show(String.Format("{0} new episode(s) were added!", listCurrentEpisodesOnline.Count));
                         ViewAllEpisodes allEpisodes = new ViewAllEpisodes();
                         allEpisodes.episodes.ItemsSource = _repo.getAllEpisodesInShow(_show.Title);
                         allEpisodes.Show();

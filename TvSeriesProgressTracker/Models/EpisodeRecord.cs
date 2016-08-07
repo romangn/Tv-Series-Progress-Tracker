@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TvSeriesProgressTracker.Models
 {
-    public class EpisodeRecord
+    public class EpisodeRecord: INotifyPropertyChanged, IDataErrorInfo
     {
         private string _title;
         private string _released;
@@ -16,12 +18,15 @@ namespace TvSeriesProgressTracker.Models
         private int _season;
         private int _showId;
 
+        public event PropertyChangedEventHandler PropertyChanged; 
+
         public string Title
         {
             get { return _title; }
             set
             {
                 _title = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -31,6 +36,7 @@ namespace TvSeriesProgressTracker.Models
             set
             {
                 _released = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -40,6 +46,7 @@ namespace TvSeriesProgressTracker.Models
             set
             {
                 _episode = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -49,6 +56,7 @@ namespace TvSeriesProgressTracker.Models
             set
             {
                 _imdbRating = value;
+                RaisePropertyChanged();
             }
         }
         public string imdbId
@@ -57,6 +65,7 @@ namespace TvSeriesProgressTracker.Models
             set
             {
                 _imdbId = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -66,6 +75,7 @@ namespace TvSeriesProgressTracker.Models
             set
             {
                 _season = value;
+                RaisePropertyChanged();
             }
         }
         public int ShowId
@@ -74,6 +84,47 @@ namespace TvSeriesProgressTracker.Models
             set
             {
                 _showId = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string Error
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string result = null;
+                if (columnName == "Title")
+                {
+                    if (string.IsNullOrEmpty(Title))
+                        result = "Title cannot be empty";
+                }
+                if (columnName == "Season")
+                {
+                    if (Season < 0)
+                        result = "Season cannot be lower than zero";
+                }
+                if (columnName == "Episode")
+                {
+                    if (Episode < 0)
+                        result = "Episode cannot be lower than 0";
+                }
+                return result;
+            }
+        }
+
+        private void RaisePropertyChanged([CallerMemberName] string caller="")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(caller));
             }
         }
     }

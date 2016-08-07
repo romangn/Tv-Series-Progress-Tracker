@@ -19,7 +19,18 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <ListView  Margin="10" 
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="Add new episode"
+                          x:Name="newEntry"
+                          Click="newEpisode_Click" />
+                <Separator />
+                <MenuItem Header="Check for new episodes"
+                          x:Name="newCheck"
+                          Click="update_Click" />
+            </Menu>
+        </DockPanel>
+        <ListView  Margin="10,19,10,10" 
                    ContextMenuService.IsEnabled="{Binding ElementName=imdbShows, Path=Items.Count, Converter={StaticResource visibilityConverter}}"
                    Name="episodes"
                    SelectionMode="Single">
@@ -28,6 +39,9 @@
                     <MenuItem Header="Make current" 
                               Click="makeCurrent_Click"
                               Style="{StaticResource visibilityStyle}"/>
+                    <MenuItem Header="Remove episode"
+                              Click="remove_Click"
+                              Style="{StaticResource visibilityStyle}" />
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>

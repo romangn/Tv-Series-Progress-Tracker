@@ -42,7 +42,6 @@ namespace TvSeriesProgressTracker
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                _show = new ShowRecord();
                 _show.Title = namebox.Text;
                 _show.Genre = genreBox.Text;
                 _show.CurrentEpisode = Int32.Parse(currentEpBox.Text);

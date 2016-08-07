@@ -121,7 +121,6 @@ namespace TvSeriesProgressTracker
             command.Parameters.AddWithValue("@IsFinished", show.IsFinished);
             command.Parameters.AddWithValue("@TotalSeasons", show.totalSeasons);
             command.Parameters.AddWithValue("@ImdbId", show.imdbID);
-            //command.Parameters.AddWithValue("@ImdbId", show.imdbID);
             try
             {
                 conn.Open();
@@ -208,7 +207,7 @@ namespace TvSeriesProgressTracker
         /// Removes all episodes of the given show from the database
         /// </summary>
         /// <param name="id">An id of the database show record</param>
-        public void removeEpisodeEntries (int id)
+        public void removeAllEpisodeEntries (int id)
         {
             string query = string.Format("Delete from Episodes where IdOfShow = @Id;");
             var conn = new SqlConnection(connectionString);
@@ -233,6 +232,36 @@ namespace TvSeriesProgressTracker
         }
 
         /// <summary>
+        /// Removes an episode from a database depending on the given id and name
+        /// </summary>
+        /// <param name="id">Id of show</param>
+        /// <param name="title">Title of the episode</param>
+        public void removeSingleEpisodeEntry (int id, string title)
+        {
+            string query = string.Format("Delete from episodes where IdOfShow=@Id and Title=@Title;");
+            var conn = new SqlConnection(connectionString);
+            var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Id", id);
+            command.Parameters.AddWithValue("@Title", title);
+            try
+            {
+                conn.Open();
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        /// <summary>
         /// Adds episodes to the database
         /// </summary>
         /// <param name="id">An id of the show</param>
@@ -244,7 +273,7 @@ namespace TvSeriesProgressTracker
             connection.Open();
             foreach (var episode in episodes)
             {
-                query = string.Format("If not exists (select 1 from Episodes where Title=@Title)insert into Episodes(Title, EpisodeNumber, Season, IdofShow)" +
+                query = string.Format("Insert into Episodes(Title, EpisodeNumber, Season, IdofShow)" +
                     " values(@Title, @EpisodeNumber, @Season, @IdofShow);");
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@Title", episode.Title);
@@ -346,6 +375,41 @@ namespace TvSeriesProgressTracker
         }
 
         /// <summary>
+        /// Check if episode already exists in the database
+        /// </summary>
+        /// <param name="title">Title of the episode</param>
+        /// <param name="id">The id of show the episode belongs to</param>
+        /// <returns>True if exists else false</returns>
+        public bool checkForExistingEpisodeEntry (string title, int id)
+        {
+            bool result = false;
+            string query = string.Format("Select count (*) from Episodes where Title = @Title and IdofShow=@ShowId;");
+            var conn = new SqlConnection(connectionString);
+            var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Title", title);
+            command.Parameters.AddWithValue("@ShowId", id);
+            try
+            {
+                conn.Open();
+                int count = (int)command.ExecuteScalar();
+                if (count > 0)
+                    result = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                if ((conn.State == ConnectionState.Open))
+                {
+                    conn.Close();
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Gets all show entries currently existing in the database
         /// </summary>
         /// <returns>A list of shows</returns>
@@ -412,6 +476,7 @@ namespace TvSeriesProgressTracker
                         record.Title = reader.GetString(reader.GetOrdinal("Title"));
                         record.Episode = reader.GetInt32(reader.GetOrdinal("EpisodeNumber"));
                         record.Season = reader.GetInt32(reader.GetOrdinal("Season"));
+                        record.ShowId = reader.GetInt32(reader.GetOrdinal("IdofShow"));
                         entries.Add(record);
                     }
                 }
@@ -593,6 +658,44 @@ namespace TvSeriesProgressTracker
                 }
             }
             return showId;
+        }
+
+        /// <summary>
+        /// Returns title of the show depending on the given id
+        /// </summary>
+        /// <param name="id">Id of the show entry in the database</param>
+        /// <returns>Title of the show</returns>
+        public string getShowTitle (int id)
+        {
+            string result = "";
+            string query = string.Format("Select Title from Shows where ShowId=@IdOfShow");
+            var conn = new SqlConnection(connectionString);
+            var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@IdOfShow", id);
+            try
+            {
+                conn.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read() && result == "")
+                    {
+                        result = reader.GetString(reader.GetOrdinal("Title"));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+            return result;
         }
 
         /// <summary>

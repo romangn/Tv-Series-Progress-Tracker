@@ -15,7 +15,7 @@ namespace TvSeriesProgressTracker
     {
         private DatabaseManipulation _db;
 
-        private static IEnumerable<HttpStatusCode> _statusCodes = new[]
+        private static IEnumerable<HttpStatusCode> _statusCodes = new []
         {
             HttpStatusCode.Accepted,
             HttpStatusCode.Found,
@@ -65,7 +65,8 @@ namespace TvSeriesProgressTracker
         public List<EpisodeRecord> getAllEpisodesInShow (string title)
         {
             List<EpisodeRecord> records =_db.getAllEpisodeEntriesForShow(getIdOfExistingShow(title));
-            return records;
+            List<EpisodeRecord> finalRecords = records.OrderBy(r => r.Season).ThenBy(r => r.Episode).ToList();
+            return finalRecords;
         }
 
         /// <summary>
@@ -74,7 +75,17 @@ namespace TvSeriesProgressTracker
         /// <param name="id">id of the show</param>
         private void removeEpisodes (int id)
         {
-            _db.removeEpisodeEntries(id);
+            _db.removeAllEpisodeEntries(id);
+        }
+
+        /// <summary>
+        /// Removes an episode selected by the user
+        /// </summary>
+        /// <param name="id">Id of the show the episode belongs to</param>
+        /// <param name="title">Title of the episode</param>
+        public void removeEpisode (int id, string title)
+        {
+            _db.removeSingleEpisodeEntry(id, title);
         }
 
         /// <summary>
@@ -86,7 +97,6 @@ namespace TvSeriesProgressTracker
         {
             return _db.getTheImdbIdOfShow(name);
         }
-
 
         /// <summary>
         /// Gets a database id of the record, required for episodes manipulation
@@ -150,11 +160,21 @@ namespace TvSeriesProgressTracker
         /// <summary>
         /// Checks if particular show already exists in the database
         /// </summary>
-        /// <param name="show"></param>
-        /// <returns></returns>
+        /// <param name="show">Show to check</param>
+        /// <returns>True if exists else false</returns>
         public bool checkIfShowAlreadyExists (ShowRecord show)
         {
             return _db.checkForExistingEntry(show.Title);
+        }
+
+        /// <summary>
+        /// Checks if particular episode already existant for the chosen show
+        /// </summary>
+        /// <param name="record">Episode record to check for</param>
+        /// <returns>True if exists else false</returns>
+        public bool checkIfEpisodeAlreadyExists (EpisodeRecord record)
+        {
+            return _db.checkForExistingEpisodeEntry(record.Title, record.ShowId);
         }
 
         /// <summary>
@@ -249,7 +269,7 @@ namespace TvSeriesProgressTracker
         }
 
         /// <summary>
-        /// Adds episodes to show
+        /// Converts episodes from dictionary to list and then adds episodes to show
         /// </summary>
         /// <param name="id">Id of the show entry in the database</param>
         /// <param name="records">A dictionary of episodes</param>
@@ -259,6 +279,11 @@ namespace TvSeriesProgressTracker
             _db.addEpisodeEntries(id, episodeList);
         }
 
+        /// <summary>
+        /// Adds episodes to show
+        /// </summary>
+        /// <param name="id">Id of the show entry</param>
+        /// <param name="records">List of episodes</param>
         public void addEpisodesToShow (int id, List<EpisodeRecord> records)
         {
             _db.addEpisodeEntries(id, records);
@@ -292,32 +317,67 @@ namespace TvSeriesProgressTracker
             System.Diagnostics.Process.Start("http://www.imdb.com/title/" + id);
         }
 
+        /// <summary>
+        /// Finds the show for the given episode
+        /// </summary>
+        /// <param name="title">Title of the episode</param>
+        /// <returns>Show id of the episode</returns>
+        public int findEpisodesShowId (string title)
+        {
+            return _db.getShowIdOfEpisode(title);
+        }
 
         /// <summary>
-        /// Processes the aquired Json string and ensures that it is valid
+        /// Finds the title of the show for the given show's id
         /// </summary>
-        /// <param name="query">A json string</param>
-        /// <returns>A valid json string</returns>
-        private string processJsonString (string query)
+        /// <param name="id">Database id of the show</param>
+        /// <returns>Title of the show</returns>
+        public string FindShowsTitle (int id)
         {
-            StringBuilder sb = new StringBuilder();
-            int counter = 0;
-            foreach (var i in query)
+            return _db.getShowTitle(id);
+        }
+
+        /// <summary>
+        /// Checks if new episodes are available for the selected show and attemps to add them
+        /// </summary>
+        /// <param name="title">Title of the show</param>
+        /// <returns>True if new episodes were added, else false</returns>
+        public bool checkForNewEpisodes (string title)
+        {
+            bool result = false;
+            var currentEpisodes = getAllEpisodesInShow(title);
+            var currentEpisodesOnline = getEpisodesInSeasons(findImdbId(title));
+            var listCurrentEpisodesOnline = convertEpisodes(currentEpisodesOnline);
+            for (int i = listCurrentEpisodesOnline.Count - 1; i >= 0; i--)
             {
-                if (i == '[' || i == ']')
-                    counter++;
-                if (counter == 1)
-                    sb.Append(i);
+                for (int j = 0; j < currentEpisodes.Count; j++)
+                {
+                    if (listCurrentEpisodesOnline[i].Title == currentEpisodes[j].Title)
+                    {
+                        listCurrentEpisodesOnline.RemoveAt(i);
+                        break;
+                    }
+                }
             }
-            sb.Append("]");
-            return sb.ToString();
+            if (listCurrentEpisodesOnline.Count == 0)
+            {
+                MessageBox.Show("No new episodes were found");
+            }
+            else
+            {
+                int id = getIdOfExistingShow(title);
+                addEpisodesToShow(id, listCurrentEpisodesOnline);            
+                MessageBox.Show(String.Format("{0} new episode(s) were added!", listCurrentEpisodesOnline.Count));
+                result = true;
+            }
+            return result;
         }
 
         /// <summary>
         /// Checks if internet connection is available, required for onlien functionality
         /// </summary>
         /// <returns></returns>
-        public bool checkIfInternetConnectionExists ()
+        public bool checkIfInternetConnectionExists()
         {
             try
             {
@@ -336,15 +396,11 @@ namespace TvSeriesProgressTracker
         }
 
         /// <summary>
-        /// Finds the show for the given episode
+        /// Checks if api is currently available
         /// </summary>
-        /// <param name="title">Title of the episode</param>
-        /// <returns>Show id of the episode</returns>
-        public int findEpisodesShowId (string title)
-        {
-            return _db.getShowIdOfEpisode(title);
-        }
-
+        /// <param name="url">Url of the api</param>
+        /// <param name="timeout">Time to perform the operation</param>
+        /// <returns>True if api is online, false if its not currently available</returns>
         public bool CheckIfApiIsOnline (string url, int timeout)
         {
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
@@ -360,6 +416,26 @@ namespace TvSeriesProgressTracker
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Processes the aquired Json string and ensures that it is valid
+        /// </summary>
+        /// <param name="query">A json string</param>
+        /// <returns>A valid json string</returns>
+        private string processJsonString(string query)
+        {
+            StringBuilder sb = new StringBuilder();
+            int counter = 0;
+            foreach (var i in query)
+            {
+                if (i == '[' || i == ']')
+                    counter++;
+                if (counter == 1)
+                    sb.Append(i);
+            }
+            sb.Append("]");
+            return sb.ToString();
         }
     }
 }

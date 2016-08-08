@@ -56,7 +56,7 @@ namespace TvSeriesProgressTracker
                     var id = _repo.getIdOfExistingShow(_show.Title);
                     _repo.addEpisodesToShow(id, showEpisodes);
                     MessageBox.Show("The new show has been added. Please select your current episode");
-                    ViewAllEpisodes eps = new ViewAllEpisodes();
+                    ViewAllEpisodes eps = new ViewAllEpisodes(_show.Title);
                     eps.episodes.ItemsSource = _repo.getAllEpisodesInShow(_show.Title);
                     eps.Show();
                 }

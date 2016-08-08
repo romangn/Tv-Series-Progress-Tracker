@@ -109,7 +109,6 @@ namespace TvSeriesProgressTracker
         /// <param name="show">A show to add</param>
         public void createNewEntry (ShowRecord show)
         {
-            //note - imdbid removed for now
             string query = string.Format("Insert into Shows (Title, Genre, CurrentEpisode, CurrentSeason, IsFinished, TotalSeasons, ImdbId)" 
                 + " values (@Title, @Genre, @CurrentEpisode, @CurrentSeason, @IsFinished, @TotalSeasons, @ImdbId);");
             var conn = new SqlConnection(connectionString);
@@ -144,10 +143,10 @@ namespace TvSeriesProgressTracker
         /// </summary>
         /// <param name="record">A show to change</param>
         /// <param name="oldName">An original name, required for keeping track of the show</param>
-        public void editEntry (ShowRecord record, string oldName)
+        public void editEntry (ShowRecord record, string oldName, int id)
         {
             string query = string.Format("Update Shows set Title=@Title, Genre=@Genre, CurrentEpisode=@CurrentEpisode," +
-                " CurrentSeason=@CurrentSeason, IsFinished=@IsFinished, TotalSeasons=@TotalSeasons where Title=@OldTitle;");
+                " CurrentSeason=@CurrentSeason, IsFinished=@IsFinished, TotalSeasons=@TotalSeasons where ShowId=@IdofShow;");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
             command.Parameters.AddWithValue("@Title", record.Title);
@@ -156,7 +155,41 @@ namespace TvSeriesProgressTracker
             command.Parameters.AddWithValue("@CurrentSeason", record.CurrentSeason);
             command.Parameters.AddWithValue("@IsFinished", record.IsFinished);
             command.Parameters.AddWithValue("@TotalSeasons", record.totalSeasons);
-            command.Parameters.AddWithValue("OldTitle", oldName);
+            command.Parameters.AddWithValue("@OldTitle", oldName);
+            command.Parameters.AddWithValue("@IdofShow", id);
+            try
+            {
+                conn.Open();
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                if ((conn.State == ConnectionState.Open))
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates an episode entry in the database
+        /// </summary>
+        /// <param name="record">Episode to update</param>
+        /// <param name="oldName">Old name of the episode</param>
+        public void editEpisodeEntry (EpisodeRecord record, int id)
+        {
+            string query = string.Format("Update Episodes set Title=@Title, Season=@Season, EpisodeNumber=@Episode" +
+                " where EpisodeId=@IdofEpisode;");
+            var conn = new SqlConnection(connectionString);
+            var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Title", record.Title);
+            command.Parameters.AddWithValue("@Season", record.Season);
+            command.Parameters.AddWithValue("@Episode", record.Episode);
+            command.Parameters.AddWithValue("@IdofEpisode", id);
             try
             {
                 conn.Open();
@@ -179,12 +212,12 @@ namespace TvSeriesProgressTracker
         /// Removes show entry from the database
         /// </summary>
         /// <param name="title">A title of the show to remove</param>
-        public void removeEntry (string title)
+        public void removeEntry (int id)
         {
-            string query = string.Format("Delete from Shows where Title = @Title;");
+            string query = string.Format("Delete from Shows where ShowId = @IdofShow;");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
-            command.Parameters.AddWithValue("@Title", title);
+            command.Parameters.AddWithValue("@IdofShow", id);
             try
             {
                 conn.Open();
@@ -236,13 +269,12 @@ namespace TvSeriesProgressTracker
         /// </summary>
         /// <param name="id">Id of show</param>
         /// <param name="title">Title of the episode</param>
-        public void removeSingleEpisodeEntry (int id, string title)
+        public void removeSingleEpisodeEntry (int id)
         {
-            string query = string.Format("Delete from episodes where IdOfShow=@Id and Title=@Title;");
+            string query = string.Format("Delete from episodes where EpisodeId=@IdofEpisode;");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
-            command.Parameters.AddWithValue("@Id", id);
-            command.Parameters.AddWithValue("@Title", title);
+            command.Parameters.AddWithValue("@IdofEpisode", id);
             try
             {
                 conn.Open();
@@ -303,8 +335,8 @@ namespace TvSeriesProgressTracker
         /// <param name="season">New seasons</param>
         public void changeCurrentEpisode (int id, int episode, int season)
         {
-            string query = string.Format("Update Shows set CurrentEpisode =@CurrentEpisode, CurrentSeason =@CurrentSeason" +
-                " where ShowId =@ShowId;");
+            string query = string.Format("Update Shows set CurrentEpisode=@CurrentEpisode, CurrentSeason=@CurrentSeason" +
+                " where ShowId=@ShowId;");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
             command.Parameters.AddWithValue("@CurrentEpisode", episode);
@@ -383,7 +415,7 @@ namespace TvSeriesProgressTracker
         public bool checkForExistingEpisodeEntry (string title, int id)
         {
             bool result = false;
-            string query = string.Format("Select count (*) from Episodes where Title = @Title and IdofShow=@ShowId;");
+            string query = string.Format("Select count (*) from Episodes where Title=@Title and IdofShow=@ShowId;");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
             command.Parameters.AddWithValue("@Title", title);
@@ -623,7 +655,7 @@ namespace TvSeriesProgressTracker
         }
 
         /// <summary>
-        /// Get the id record of the show in the database
+        /// Gets the id record of the show in the database
         /// </summary>
         /// <param name="name">Name of the show</param>
         /// <returns>An id record of the show</returns>
@@ -658,6 +690,46 @@ namespace TvSeriesProgressTracker
                 }
             }
             return showId;
+        }
+
+        /// <summary>
+        /// Gets the id record of the episode in the database
+        /// </summary>
+        /// <param name="title">Title of the episode</param>
+        /// <param name="id">An id of the show the episode belongs to</param>
+        /// <returns></returns>
+        public int getIdOfEpisode (string title, int id)
+        {
+            int episodeId = 0;
+            var conn = new SqlConnection(connectionString);
+            string query = string.Format("Select EpisodeId from Episodes where Title=@Title and IdofShow=@ShowId;");
+            var command = new SqlCommand(query, conn);
+            command.Parameters.AddWithValue("@Title", title);
+            command.Parameters.AddWithValue("@ShowId", id);
+            try
+            {
+                conn.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        episodeId = reader.GetInt32(reader.GetOrdinal("EpisodeId"));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                if ((conn.State == ConnectionState.Open))
+                {
+                    conn.Close();
+                }
+            }
+            return episodeId;
         }
 
         /// <summary>

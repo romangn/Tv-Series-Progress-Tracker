@@ -76,6 +76,9 @@
     </ApplicationDefinition>
     <Compile Include="Database\DatabaseManipulation.cs" />
     <Compile Include="Converters\EpisodeConverter.cs" />
+    <Compile Include="Views\EditEpisode.xaml.cs">
+      <DependentUpon>EditEpisode.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\EpisodeRecord.cs" />
     <Compile Include="Views\NewEpisode.xaml.cs">
       <DependentUpon>NewEpisode.xaml</DependentUpon>
@@ -103,6 +106,10 @@
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Converters\YearsFormatConverter.cs" />
     <Compile Include="Converters\YesNoConverter.cs" />
+    <Page Include="Views\EditEpisode.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\NewEpisode.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

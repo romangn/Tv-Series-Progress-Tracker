@@ -56,3 +56,5 @@ C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSer
 C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker\obj\Debug\Views\ViewAllEpisodes.baml
 C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker\obj\Debug\Views\NewEpisode.g.cs
 C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker\obj\Debug\Views\NewEpisode.baml
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker\obj\Debug\Views\EditEpisode.g.cs
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker\obj\Debug\Views\EditEpisode.baml

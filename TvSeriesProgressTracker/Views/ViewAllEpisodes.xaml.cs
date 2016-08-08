@@ -47,32 +47,37 @@ namespace TvSeriesProgressTracker.Views
         private void remove_Click(object sender, RoutedEventArgs e)
         {
             EpisodeRecord episode = (EpisodeRecord)episodes.SelectedItem;
-            episode.ShowId = _repo.findEpisodesShowId(episode.Title);
-            _repo.removeEpisode(episode.ShowId, episode.Title);
+            _repo.removeEpisode(episode.Title);
             episodes.ItemsSource = _repo.getAllEpisodesInShow(_repo.FindShowsTitle(episode.ShowId));
         }
 
         private void update_Click(object sender, RoutedEventArgs e)
         {
-            if (_repo.checkIfInternetConnectionExists())
+            if (_repo.findImdbId(title) == "Manual")
             {
-                if (_repo.CheckIfApiIsOnline("http://www.omdbapi.com/", 5000))
+                MessageBox.Show("Cannot perform the operation for manually added shows");
+            }
+            else {
+                if (_repo.checkIfInternetConnectionExists())
                 {
-                    var items = episodes.Items.Cast<EpisodeRecord>().ToList();
-                    var title = _repo.FindShowsTitle(items[0].ShowId);
-                    if (_repo.checkForNewEpisodes(title))
+                    if (_repo.CheckIfApiIsOnline("http://www.omdbapi.com/", 5000))
                     {
-                        episodes.ItemsSource = _repo.getAllEpisodesInShow(title);
+                        var items = episodes.Items.Cast<EpisodeRecord>().ToList();
+                        var title = _repo.FindShowsTitle(items[0].ShowId);
+                        if (_repo.checkForNewEpisodes(title))
+                        {
+                            episodes.ItemsSource = _repo.getAllEpisodesInShow(title);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("The online resource is currently unavailable. Please try again later");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("The online resource is currently unavailable. Please try again later");
+                    MessageBox.Show("Please check your internet connection");
                 }
-            }
-            else
-            {
-                MessageBox.Show("Please check your internet connection");
             }
         }
 
@@ -90,6 +95,15 @@ namespace TvSeriesProgressTracker.Views
         {
             ((Window)sender).Closed -= ChildWindowClosed;
             episodes.ItemsSource = _repo.getAllEpisodesInShow(title);
+        }
+
+        private void edit_Click(object sender, RoutedEventArgs e)
+        {
+            EpisodeRecord record = (EpisodeRecord)episodes.SelectedItem;
+            EditEpisode episode = new EditEpisode();
+            episode.DataContext = record;
+            episode.Closed += ChildWindowClosed;
+            episode.Show();
         }
     }
 }

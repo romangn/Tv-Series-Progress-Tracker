@@ -72,26 +72,32 @@ namespace TvSeriesProgressTracker
 
         private void checkForNewEpisodes_Click(object sender, RoutedEventArgs e)
         {
-            if (_repo.checkIfInternetConnectionExists())
+            _show = (ShowRecord)searchShows.SelectedItem;
+            if (_repo.findImdbId(_show.Title) == "Manual")
             {
-                if (_repo.CheckIfApiIsOnline("http://www.omdbapi.com/", 5000))
+                MessageBox.Show("Cannot perform the operation for manually added shows");
+            }
+            else {
+                if (_repo.checkIfInternetConnectionExists())
                 {
-                    _show = (ShowRecord)searchShows.SelectedItem;
-                    if (_repo.checkForNewEpisodes(_show.Title))
+                    if (_repo.CheckIfApiIsOnline("http://www.omdbapi.com/", 5000))
                     {
-                        ViewAllEpisodes allEpisodes = new ViewAllEpisodes();
-                        allEpisodes.episodes.ItemsSource = _repo.getAllEpisodesInShow(_show.Title);
-                        allEpisodes.Show();
+                        if (_repo.checkForNewEpisodes(_show.Title))
+                        {
+                            ViewAllEpisodes allEpisodes = new ViewAllEpisodes();
+                            allEpisodes.episodes.ItemsSource = _repo.getAllEpisodesInShow(_show.Title);
+                            allEpisodes.Show();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("The online resource is currently unavailable. Please try again later");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("The online resource is currently unavailable. Please try again later");
+                    MessageBox.Show("Please check your internet connection");
                 }
-            }
-            else
-            {
-                MessageBox.Show("Please check your internet connection");
             }
         }
 

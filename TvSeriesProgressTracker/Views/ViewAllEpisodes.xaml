@@ -42,6 +42,9 @@
                     <MenuItem Header="Remove episode"
                               Click="remove_Click"
                               Style="{StaticResource visibilityStyle}" />
+                    <MenuItem Header="Edit episode"
+                              Click="edit_Click"
+                              Style="{StaticResource visibilityStyle}" />
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>

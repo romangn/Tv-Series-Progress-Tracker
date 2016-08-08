@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker\App.xaml
-8-1914814119
+91942657324
 
-201588935357
+211821170715
 141681902892
-Views\NewEpisode.xaml;Views\DisplayAllImdbShows.xaml;Views\EditEntry.xaml;MainWindow.xaml;Views\NewEntry.xaml;Views\SearchExistingShows.xaml;Views\ViewAllEpisodes.xaml;Views\ViewAllShows.xaml;
+Views\EditEpisode.xaml;Views\NewEpisode.xaml;Views\DisplayAllImdbShows.xaml;Views\EditEntry.xaml;MainWindow.xaml;Views\NewEntry.xaml;Views\SearchExistingShows.xaml;Views\ViewAllEpisodes.xaml;Views\ViewAllShows.xaml;
 
 False
 

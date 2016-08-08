@@ -11,59 +11,53 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TvSeriesProgressTracker.Models;
 
 namespace TvSeriesProgressTracker
 {
     /// <summary>
-    /// Interaction logic for EditEntry.xaml
+    /// Interaction logic for EditEpisode.xaml
     /// </summary>
-    public partial class EditEntry : Window
+    public partial class EditEpisode : Window
     {
-        private ShowRecord _show = new ShowRecord();
+        private EpisodeRecord _record = new EpisodeRecord();
         private ShowRepository _repo;
         private int _errors = 0;
 
-        public EditEntry()
+        public EditEpisode()
         {
             InitializeComponent();
             _repo = new ShowRepository();
         }
 
-        private void button_Save(object sender, RoutedEventArgs e)
+        private void save_Click(object sender, RoutedEventArgs e)
         {
             string oldName = oldNameBox.Text;
             MessageBoxResult result = MessageBox.Show("Are the new details correct?" +
-                "\nName of the show: " + namebox.Text +
-                "\nGenre of the show: " + genreBox.Text +
-                "\nTotal seasons in the show: " + Int32.Parse(seasonsCountBox.Text) +
-                "\nCurrent season: " + Int32.Parse(currentSeasonBox.Text) +
-                "\nCurrent episode: " + Int32.Parse(currentEpBox.Text) +
-                "\nHave you finished watching the show? " + isFinishedBox.IsChecked.Value , "Confirmation",
-                MessageBoxButton.YesNo, MessageBoxImage.Question);
+                 "\nTitle: " + titlebox.Text +
+                "\nSeason: " + Int32.Parse(seasonBox.Text) +
+                "\nEpisode: " + Int32.Parse(episodeBox.Text),
+            "   Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                _show = new ShowRecord();
-                _show.Title = namebox.Text;
-                _show.Genre = genreBox.Text;
-                _show.CurrentEpisode = Int32.Parse(currentEpBox.Text);
-                _show.CurrentSeason = Int32.Parse(currentSeasonBox.Text);
-                _show.IsFinished = isFinishedBox.IsChecked.Value;
-                _show.totalSeasons = Int32.Parse(seasonsCountBox.Text);
-                if (!_repo.checkIfShowAlreadyExists(_show))
+                _record.Title = titlebox.Text;
+                _record.Season = Int32.Parse(seasonBox.Text);
+                _record.Episode = Int32.Parse(episodeBox.Text);
+                _record.ShowId = _repo.findEpisodesShowId(_record.Title);
+                if (!_repo.checkIfEpisodeAlreadyExists(_record))
                 {
-                    _repo.editShow(_show, oldName);
+                    _repo.editEpisode(_record, oldName);
                     this.Close();
                 }
-                else if (_show.Title == oldName)
+                else if (_record.Title == oldName)
                 {
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("The show with the same name already exists");
+                    MessageBox.Show("The episode with the same name already exists");
                 }
             }
-
         }
 
         private void Validation_Error(object sener, ValidationErrorEventArgs e)
@@ -82,7 +76,7 @@ namespace TvSeriesProgressTracker
 
         private void Confirm_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            _show = new ShowRecord();
+            _record = new EpisodeRecord();
             e.Handled = true;
         }
     }

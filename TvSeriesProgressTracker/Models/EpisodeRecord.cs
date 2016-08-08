@@ -17,6 +17,7 @@ namespace TvSeriesProgressTracker.Models
         private string _imdbId;
         private int _season;
         private int _showId;
+        private string _oldName;
 
         public event PropertyChangedEventHandler PropertyChanged; 
 
@@ -26,6 +27,7 @@ namespace TvSeriesProgressTracker.Models
             set
             {
                 _title = value;
+                _oldName = _title;
                 RaisePropertyChanged();
             }
         }
@@ -86,6 +88,11 @@ namespace TvSeriesProgressTracker.Models
                 _showId = value;
                 RaisePropertyChanged();
             }
+        }
+
+        public string OldName
+        {
+            get { return _oldName; }
         }
 
         public string Error

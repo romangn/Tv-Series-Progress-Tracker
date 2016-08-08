@@ -54,7 +54,7 @@ namespace TvSeriesProgressTracker
         {
             var id = getIdOfExistingShow(show.Title);
             removeEpisodes(id);
-            _db.removeEntry(show.Title);
+            _db.removeEntry(id);
         }
 
         /// <summary>
@@ -83,9 +83,11 @@ namespace TvSeriesProgressTracker
         /// </summary>
         /// <param name="id">Id of the show the episode belongs to</param>
         /// <param name="title">Title of the episode</param>
-        public void removeEpisode (int id, string title)
+        public void removeEpisode (string title)
         {
-            _db.removeSingleEpisodeEntry(id, title);
+            var showId = findEpisodesShowId(title);
+            var episodeId = getIdofExistingEpisode(title, showId);
+            _db.removeSingleEpisodeEntry(episodeId);
         }
 
         /// <summary>
@@ -106,6 +108,17 @@ namespace TvSeriesProgressTracker
         public int getIdOfExistingShow (string title)
         {
             return _db.getIdOfShow(title);
+        }
+
+        /// <summary>
+        /// Gets a database id of the episode record
+        /// </summary>
+        /// <param name="title">Title of the episode</param>
+        /// <param name="id">Id of the show the episode belongs to</param>
+        /// <returns></returns>
+        public int getIdofExistingEpisode (string title, int id)
+        {
+            return _db.getIdOfEpisode(title, id);
         }
 
         /// <summary>
@@ -138,13 +151,26 @@ namespace TvSeriesProgressTracker
         }
 
         /// <summary>
-        /// Changed details of the show to the new user inputs
+        /// Changes details of the show to the new user inputs
         /// </summary>
         /// <param name="show">Shot to change</param>
-        /// <param name="oldName">An old name of the show, required for track keeping</param>
+        /// <param name="oldName">An original name of the show, required for track keeping</param>
         public void editShow (ShowRecord show, string oldName)
         {
-            _db.editEntry(show, oldName);
+            var id = getIdOfExistingShow(oldName);
+            _db.editEntry(show, oldName, id);
+        }
+
+        /// <summary>
+        /// Changes details of the episode
+        /// </summary>
+        /// <param name="record">Episode to change</param>
+        /// <param name="oldName">Original name of the episode</param>
+        public void editEpisode (EpisodeRecord record, string oldName)
+        {
+            record.ShowId = findEpisodesShowId(oldName);
+            var episodeId = getIdofExistingEpisode(oldName, record.ShowId);
+            _db.editEpisodeEntry(record, episodeId);
         }
 
         /// <summary>

@@ -37,7 +37,6 @@ namespace TvSeriesProgressTracker
                 "\nGenre of the show: " + genreBox.Text +
                 "\nCurrent episode: " + Int32.Parse(currentEpBox.Text) +
                 "\nCurrent season: " + Int32.Parse(currentSeasonBox.Text) +
-                "\nHave you finished watching the show? " + isFinishedBox.IsChecked.Value +
                 "\nTotal seasons: " + Int32.Parse(overallSeasonsBox.Text), "Confirmation", 
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
@@ -47,7 +46,7 @@ namespace TvSeriesProgressTracker
                 _show.CurrentEpisode = Int32.Parse(currentEpBox.Text);
                 _show.CurrentSeason = Int32.Parse(currentSeasonBox.Text);
                 _show.totalSeasons = Int32.Parse(overallSeasonsBox.Text);
-                _show.IsFinished = isFinishedBox.IsChecked.Value;
+                _show.IsFinished = false;
                 if (!_repo.addNewShow(_show))
                 {
                     MessageBox.Show("The show with the same name already exists");

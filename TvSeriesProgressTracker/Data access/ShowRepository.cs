@@ -11,7 +11,7 @@ using TvSeriesProgressTracker.Models;
 
 namespace TvSeriesProgressTracker
 {
-    class ShowRepository
+    public class ShowRepository
     {
         private DatabaseManipulation _db;
 
@@ -174,7 +174,7 @@ namespace TvSeriesProgressTracker
         }
 
         /// <summary>
-        /// Changed the current episode and season that are being watched by the user
+        /// Changes the current episode and season that are being watched by the user
         /// </summary>
         /// <param name="episode">A new episode to change</param>
         public void changeCurrentEpisode (EpisodeRecord episode)
@@ -182,15 +182,14 @@ namespace TvSeriesProgressTracker
             _db.changeCurrentEpisode(episode.ShowId, episode.Episode, episode.Season);
         }
 
-
         /// <summary>
-        /// Checks if particular show already exists in the database
+        /// Checks if particular show already exists in the database while editing the item
         /// </summary>
         /// <param name="show">Show to check</param>
         /// <returns>True if exists else false</returns>
         public bool checkIfShowAlreadyExists (ShowRecord show)
         {
-            return _db.checkForExistingEntry(show.Title);
+            return _db.checkForExistingShowEntry(show.Title);
         }
 
         /// <summary>

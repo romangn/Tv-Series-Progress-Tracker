@@ -54,7 +54,7 @@ namespace TvSeriesProgressTracker
             var conn = new SqlConnection(connectionString);
             string episodeQuery = "if not exists (select name from sysobjects where name = 'Episodes') CREATE TABLE" +
                 " Episodes(EpisodeId int PRIMARY KEY IDENTITY (1, 1), Title nvarchar(100), EpisodeNumber int NOT NULL," +
-                " Season int NOT NULL, CurrentlyWatching bit, IdofShow int, FOREIGN KEY (IdofShow) REFERENCES Shows(ShowId));";
+                " Season int NOT NULL, IdofShow int, FOREIGN KEY (IdofShow) REFERENCES Shows(ShowId));";
             string query = "if not exists (select name from sysobjects where name = 'Shows') CREATE TABLE" +
                 " Shows(ShowId int PRIMARY KEY IDENTITY (1, 1), Title nvarchar(100) NOT NULL, Genre nvarchar(50) NOT NULL,"
                 + " CurrentEpisode int, CurrentSeason int, IsFinished bit, TotalSeasons int, ImdbId nvarchar(50));";
@@ -351,19 +351,6 @@ namespace TvSeriesProgressTracker
             {
                 ex.ToString();
             }
-            command.Parameters.Clear();
-            command = new SqlCommand(query, conn);
-            query = string.Format("Update Episodes set CurrentlyWatching=1 where EpisodeNumber=@CurrentEpisode, Season=@CurrentSeason;");
-            command.Parameters.AddWithValue("@CurrentEpisode", episode);
-            command.Parameters.AddWithValue("@CurrentSeason", season);
-            try
-            {
-                command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                ex.ToString();
-            }
             finally
             {
                 if ((conn.State == ConnectionState.Open))
@@ -374,14 +361,15 @@ namespace TvSeriesProgressTracker
         }
 
         /// <summary>
-        /// Check if show already exists in the database
+        /// Check if show with the given name and id already exists in the database while editing the item
         /// </summary>
         /// <param name="title">A name of the show</param>
+        /// <param name="id">A database id of the show record</param>
         /// <returns>True if exists, else false</returns>
-        public bool checkForExistingEntry (string title)
+        public bool checkForExistingShowEntry (string title)
         {
             bool result = false;
-            string query = string.Format("Select count (*) from Shows where Title = @Title;");
+            string query = string.Format("Select count (*) from Shows where Title = @Title ;");
             var conn = new SqlConnection(connectionString);
             var command = new SqlCommand(query, conn);
             command.Parameters.AddWithValue("@Title", title);

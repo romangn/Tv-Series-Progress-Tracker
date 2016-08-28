@@ -45,7 +45,7 @@ namespace TvSeriesProgressTracker
         private void onClick_Edit (object sender, RoutedEventArgs e)
         {
             _show = (ShowRecord)shows.SelectedItem;
-            EditEntry entry = new EditEntry();
+            EditEntry entry = new EditEntry(_show.Title);
             entry.DataContext = _show;
             entry.Closed += ChildWindowClosed;
             entry.Show();

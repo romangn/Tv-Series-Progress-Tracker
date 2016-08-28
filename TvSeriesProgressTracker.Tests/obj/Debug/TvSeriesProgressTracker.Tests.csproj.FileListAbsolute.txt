@@ -1,0 +1,10 @@
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker.Tests\obj\Debug\TvSeriesProgressTracker.Tests.csprojResolveAssemblyReference.cache
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker.Tests\bin\Debug\TvSeriesProgressTracker.Tests.dll
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker.Tests\bin\Debug\TvSeriesProgressTracker.Tests.pdb
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker.Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker.Tests\bin\Debug\TvSeriesProgressTracker.exe
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker.Tests\bin\Debug\Newtonsoft.Json.dll
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker.Tests\bin\Debug\TvSeriesProgressTracker.pdb
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker.Tests\bin\Debug\Newtonsoft.Json.xml
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker.Tests\obj\Debug\TvSeriesProgressTracker.Tests.dll
+C:\Users\kir\Documents\Visual Studio 2015\Projects\TvSeriesProgressTracker\TvSeriesProgressTracker.Tests\obj\Debug\TvSeriesProgressTracker.Tests.pdb

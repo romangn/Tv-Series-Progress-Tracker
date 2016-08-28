@@ -22,16 +22,17 @@ namespace TvSeriesProgressTracker
         private ShowRecord _show = new ShowRecord();
         private ShowRepository _repo;
         private int _errors = 0;
+        private string _oldTitle;
 
-        public EditEntry()
+        public EditEntry(string oldName)
         {
             InitializeComponent();
             _repo = new ShowRepository();
+            _oldTitle = oldName;
         }
 
         private void button_Save(object sender, RoutedEventArgs e)
         {
-            string oldName = oldNameBox.Text;
             MessageBoxResult result = MessageBox.Show("Are the new details correct?" +
                 "\nName of the show: " + namebox.Text +
                 "\nGenre of the show: " + genreBox.Text +
@@ -49,19 +50,21 @@ namespace TvSeriesProgressTracker
                 _show.CurrentSeason = Int32.Parse(currentSeasonBox.Text);
                 _show.IsFinished = isFinishedBox.IsChecked.Value;
                 _show.totalSeasons = Int32.Parse(seasonsCountBox.Text);
-                if (!_repo.checkIfShowAlreadyExists(_show))
+                if (_show.Title == _oldTitle)
                 {
-                    _repo.editShow(_show, oldName);
+                    _repo.editShow(_show, _oldTitle);
                     this.Close();
                 }
-                else if (_show.Title == oldName)
+                else if (!_repo.checkIfShowAlreadyExists(_show))
                 {
+                    _repo.editShow(_show, _oldTitle);
                     this.Close();
                 }
                 else
                 {
                     MessageBox.Show("The show with the same name already exists");
-                }
+                    namebox.Text = _oldTitle;
+                }              
             }
 
         }

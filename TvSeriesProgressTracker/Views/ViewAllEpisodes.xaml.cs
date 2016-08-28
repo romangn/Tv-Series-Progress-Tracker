@@ -28,6 +28,7 @@ namespace TvSeriesProgressTracker.Views
         {
             InitializeComponent();
             _repo = new ShowRepository();
+
         }
 
         public ViewAllEpisodes(string name)
@@ -100,7 +101,7 @@ namespace TvSeriesProgressTracker.Views
         private void edit_Click(object sender, RoutedEventArgs e)
         {
             EpisodeRecord record = (EpisodeRecord)episodes.SelectedItem;
-            EditEpisode episode = new EditEpisode();
+            EditEpisode episode = new EditEpisode(record.Title);
             episode.DataContext = record;
             episode.Closed += ChildWindowClosed;
             episode.Show();

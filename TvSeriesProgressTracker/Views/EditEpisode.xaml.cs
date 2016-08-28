@@ -23,16 +23,17 @@ namespace TvSeriesProgressTracker
         private EpisodeRecord _record = new EpisodeRecord();
         private ShowRepository _repo;
         private int _errors = 0;
+        private string _oldTitle;
 
-        public EditEpisode()
+        public EditEpisode(string oldName)
         {
             InitializeComponent();
             _repo = new ShowRepository();
+            _oldTitle = oldName;
         }
 
         private void save_Click(object sender, RoutedEventArgs e)
         {
-            string oldName = oldNameBox.Text;
             MessageBoxResult result = MessageBox.Show("Are the new details correct?" +
                  "\nTitle: " + titlebox.Text +
                 "\nSeason: " + Int32.Parse(seasonBox.Text) +
@@ -44,18 +45,20 @@ namespace TvSeriesProgressTracker
                 _record.Season = Int32.Parse(seasonBox.Text);
                 _record.Episode = Int32.Parse(episodeBox.Text);
                 _record.ShowId = _repo.findEpisodesShowId(_record.Title);
-                if (!_repo.checkIfEpisodeAlreadyExists(_record))
+                if (_record.Title == _oldTitle)
                 {
-                    _repo.editEpisode(_record, oldName);
+                    _repo.editEpisode(_record, _oldTitle);
                     this.Close();
                 }
-                else if (_record.Title == oldName)
+                else if (!_repo.checkIfEpisodeAlreadyExists(_record))
                 {
+                    _repo.editEpisode(_record, _oldTitle);
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("The episode with the same name already exists");
+                    MessageBox.Show("The episode with the same name already exists for this show");
+                    titlebox.Text = _oldTitle;
                 }
             }
         }

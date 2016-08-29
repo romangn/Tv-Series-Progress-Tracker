@@ -81,10 +81,7 @@ namespace TvSeriesProgressTracker
         private void onClick_Imdb(object sender, RoutedEventArgs e)
         {
             ShowRecord record = (ShowRecord)imdbShows.SelectedItem;
-            if (!string.IsNullOrEmpty(record.imdbID) && !string.IsNullOrWhiteSpace(record.imdbID))
-                _repo.openTheimdbPage(record.imdbID);
-            else
-                MessageBox.Show("Could not find show");
+            _repo.openTheimdbPage(record);
         }
     }
 }

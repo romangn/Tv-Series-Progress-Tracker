@@ -9,6 +9,16 @@
         ResizeMode="NoResize">
     <Window.Resources>
         <local:EpisodeConverter x:Key="EpisodeConverter" />
+        <local:VisibilityConverter x:Key="visibilityConverter" />
+        <Style TargetType="MenuItem" x:Key="visibilityStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}"
+                                                 Value="{x:Null}" >
+                    <Setter Property="IsEnabled"
+                            Value="False" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>
         <DockPanel>
@@ -45,7 +55,32 @@
         <TextBlock Text="Unfinished shows"
                    Margin="0, 20, 0, 0"
                    VerticalAlignment="Center" />
-        <ListView Margin="0, 20, 0, 0" Name="unfinishedShows" SelectionMode="Single">
+        <ListView Margin="0, 20, 0, 0" 
+                  Name="unfinishedShows" 
+                  SelectionMode="Single"
+                  ContextMenuService.IsEnabled="{Binding ElementName=shows, Path=Items.Count, Converter={StaticResource visibilityConverter}}">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Edit" 
+                              Click="Edit_Click"
+                              Style="{StaticResource visibilityStyle}"/>
+                    <MenuItem Header="Remove from unfinished shows" 
+                              Click="RemoveUnfinished_Click"
+                              Style="{StaticResource visibilityStyle}"/>
+                    <MenuItem Header="View at imdb"
+                              Click="ImdbView_Click"
+                              Style="{StaticResource visibilityStyle}" />
+                    <MenuItem Header="View all episodes"
+                              Click="ViewEpisodes_Click"
+                              Style="{StaticResource visibilityStyle}" />
+                    <MenuItem Header="Check for new episodes"
+                              Click="CheckForNewEpisodes_Click"
+                              Style="{StaticResource visibilityStyle}" />
+                    <MenuItem Header="Remove from my collection"
+                              Click="CompletelyRemove_Click"
+                              Style="{StaticResource visibilityStyle}" />
+                </ContextMenu>
+            </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name of the show"

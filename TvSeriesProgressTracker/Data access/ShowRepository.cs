@@ -337,9 +337,17 @@ namespace TvSeriesProgressTracker
         /// Opens IMDB page of the show
         /// </summary>
         /// <param name="id">Id at imdb to pass to the browser</param>
-        public void openTheimdbPage (string id)
+        public void openTheimdbPage (ShowRecord record)
         {
-            System.Diagnostics.Process.Start("http://www.imdb.com/title/" + id);
+            string id = findImdbId(record.Title);
+            if (id == "Manual")
+            {
+                MessageBox.Show("Cannot perform this action for manually added TV series");
+            }
+            else
+            {
+                System.Diagnostics.Process.Start("http://www.imdb.com/title/" + id);
+            }
         }
 
         /// <summary>
